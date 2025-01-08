@@ -10,10 +10,12 @@ from basicsr.utils import FileClient, imfrombytes, img2tensor
 from basicsr.utils.matlab_functions import imresize, rgb2ycbcr
 from basicsr.utils.registry import DATASET_REGISTRY
 
+from utils import utils_blindsr as blindsr
+
 
 @DATASET_REGISTRY.register()
 class ImageNetPairedDataset(data.Dataset):
-    
+
     def __init__(self, opt):
         super(ImageNetPairedDataset, self).__init__()
         self.opt = opt
@@ -56,7 +58,12 @@ class ImageNetPairedDataset(data.Dataset):
         size_h = max(size_h, self.opt['gt_size'])
         size_w = max(size_w, self.opt['gt_size'])
         img_gt = cv2.resize(img_gt, (size_w, size_h))
-        img_lq = imresize(img_gt, 1 / scale)
+        max_side = self.opt['gt_size'] * scale
+        if size_h >= max_side and size_w >= max_side:
+            img_lq, img_gt = blindsr.degradation_bsrgan(
+                img_gt, sf=scale, lq_patchsize=self.opt['gt_size'], isp_model=None)
+        else:
+            img_lq = imresize(img_gt, 1 / scale)
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
         img_lq = np.ascontiguousarray(img_lq, dtype=np.float32)

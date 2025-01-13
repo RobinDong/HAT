@@ -12,7 +12,7 @@ datasets:
   test_1:  # the 1st test dataset
     name: custom
     type: SingleImageDataset
-    dataroot_lq: /home/robin/code/KAIR/testsets/bird/
+    dataroot_lq: /home/robin/code/HAT/testsets/bird/
     io_backend:
       type: disk
 
@@ -38,7 +38,8 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: experiments/train_HAT_SRx4_ImageNet_from_scratch/models/net_g_800000.pth
+  pretrain_network_g: experiments/train_Real_HAT_GAN_SRx4_finetune_from_mse_model/models/net_g_240000.pth
+  # pretrain_network_g: /home/robin/Real_HAT_GAN_sharper.pth
   strict_load_g: true
   param_key_g: 'params_ema'
 

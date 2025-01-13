@@ -269,14 +269,14 @@ class RealHATGANModel(SRGANModel):
             mod_pad_w = window_size - w % window_size
         img = F.pad(self.lq, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
         if hasattr(self, 'net_g_ema'):
-            self.net_g_ema.eval()
+            self.net_g_ema_infer.eval()
             with torch.no_grad():
-                self.output = self.net_g_ema(img)
+                self.output = self.net_g_ema_infer(img)
         else:
-            self.net_g.eval()
+            self.net_g_infer.eval()
             with torch.no_grad():
-                self.output = self.net_g(img)
-            self.net_g.train()
+                self.output = self.net_g_infer(img)
+            self.net_g_infer.train()
 
         _, _, h, w = self.output.size()
         self.output = self.output[:, :, 0:h - mod_pad_h * scale, 0:w - mod_pad_w * scale]

@@ -1,1 +1,1 @@
-python3 hat/test.py -opt options/test/HAT_SRx4_ImageNet-LR.yml
+PYTHONPATH=/home/robin/code/BasicSR/ python3 hat/test.py -opt options/test/HAT_SRx4_ImageNet-LR.yml

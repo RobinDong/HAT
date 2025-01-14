@@ -105,7 +105,15 @@ class RealESRGANDataset(data.Dataset):
                 break
             finally:
                 retry -= 1
-        img_gt = imfrombytes(img_bytes, float32=True)
+        img_gt = imfrombytes(img_bytes, float32=False)
+        MIN_SIZE = 256
+        # randomly resize for different scale of texture [1.0 ~ 4.0)
+        ratio = (np.random.random() + 1) * 2
+        height, width, _ = img_gt.shape
+        new_width, new_height = int(width // ratio), int(height // ratio)
+        if new_width >= MIN_SIZE and new_height >= MIN_SIZE:
+            img_gt = cv2.resize(img_gt, (new_width, new_height), cv2.INTER_AREA)
+        img_gt = img_gt.astype(np.float32) / 255.
 
         # -------------------- Do augmentation for training: flip, rotation -------------------- #
         img_gt = augment(img_gt, self.opt['use_hflip'], self.opt['use_rot'])

@@ -28,14 +28,14 @@ class HATModel(SRModel):
     def process(self):
         # model inference
         if hasattr(self, 'net_g_ema'):
-            self.net_g_ema.eval()
+            self.net_g_ema_infer.eval()
             with torch.no_grad():
-                self.output = self.net_g_ema(self.img)
+                self.output = self.net_g_ema_infer(self.img)
         else:
-            self.net_g.eval()
+            self.net_g_infer.eval()
             with torch.no_grad():
-                self.output = self.net_g(self.img)
-            self.net_g.train()
+                self.output = self.net_g_infer(self.img)
+            self.net_g_infer.train()
 
     def tile_process(self):
         """It will first crop input images to tiles, and then process each tile.

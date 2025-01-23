@@ -1,7 +1,7 @@
 # general settings
 name: train_Real_HAT_GAN_SRx4_finetune_from_mse_model
 model_type: RealHATGANModel
-scale: 4
+scale: 2
 num_gpu: auto
 manual_seed: 0
 
@@ -30,7 +30,7 @@ poisson_scale_range2: [0.05, 2.5]
 gray_noise_prob2: 0.4
 jpeg_range2: [30, 95]
 
-gt_size: 256
+gt_size: 128
 queue_size: 180
 
 # dataset and data loader settings
@@ -61,13 +61,13 @@ datasets:
 
     final_sinc_prob: 0.8
 
-    gt_size: 256
+    gt_size: 128
     use_hflip: True
-    use_rot: True
+    use_rot: False
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 32
+    num_worker_per_gpu: 16
     batch_size_per_gpu: 6
     dataset_enlarge_ratio: 1
     prefetch_mode: cuda
@@ -84,7 +84,7 @@ datasets:
     name: Set5
     type: PairedImageDataset
     dataroot_gt: /data/Set5/GTmod12
-    dataroot_lq: /data/Set5/LRbicx4
+    dataroot_lq: /data/Set5/LRbicx2
     io_backend:
       type: disk
 
@@ -92,7 +92,7 @@ datasets:
     name: Set14
     type: PairedImageDataset
     dataroot_gt: /data/Set14/GTmod12
-    dataroot_lq: /data/Set14/LRbicx4
+    dataroot_lq: /data/Set14/LRbicx2
     io_backend:
       type: disk
 
@@ -100,14 +100,14 @@ datasets:
     name: BSD100
     type: PairedImageDataset
     dataroot_gt: /data/BSD100/BSD100_HR
-    dataroot_lq: /data/BSD100/BSD100_LR_x4
+    dataroot_lq: /data/BSD100/BSD100_LR_x2
     io_backend:
       type: disk
 
   val_4:
     name: BirdUGC
     type: PairedImageDataset
-    dataroot_gt: /data/bird_ugc/val
+    dataroot_gt: /data/bird_ugc/val_lrx2
     dataroot_lq: /data/bird_ugc/val_lrx4
     io_backend:
       type: disk
@@ -115,7 +115,7 @@ datasets:
 # network structures
 network_g:
   type: HAT
-  upscale: 4
+  upscale: 2
   in_chans: 3
   img_size: 64
   window_size: 16
@@ -141,7 +141,10 @@ network_d:
 path:
   # use the pre-trained Real-ESRNet model
   # pretrain_network_g: /home/robin/HAT_SRx4_ImageNet-pretrain.pth # train the MSE-based model 'Real_HAT' first.
-  pretrain_network_g: /home/robin/net_g_80000.pth
+  # pretrain_network_g: /home/robin/net_g_20000_PSNR_27.7_.pth
+  # pretrain_network_g: /home/robin/HAT_SRx2_ImageNet-pretrain.pth
+  pretrain_network_g: /home/robin/tmp/net_g_170000.pth
+  pretrain_network_d: /home/robin/tmp/net_d_250000.pth
   param_key_g: params_ema
   strict_load_g: true
   resume_state: ~
@@ -151,12 +154,12 @@ train:
   ema_decay: 0.999
   optim_g:
     type: Adam
-    lr: !!float 1e-4
+    lr: !!float 1e-5
     weight_decay: 0
     betas: [0.9, 0.99]
   optim_d:
     type: Adam
-    lr: !!float 1e-4
+    lr: !!float 1e-5
     weight_decay: 0
     betas: [0.9, 0.99]
 
@@ -171,7 +174,7 @@ train:
   # losses
   pixel_opt:
     type: L1Loss
-    loss_weight: 1.0
+    loss_weight: 0.5
     reduction: mean
   # perceptual loss (content and style losses)
   perceptual_opt:
@@ -209,18 +212,18 @@ val:
   metrics:
     psnr: # metric name
       type: calculate_psnr
-      crop_border: 4
+      crop_border: 2
       test_y_channel: true
       better: higher
     ssim:
       type: calculate_ssim
-      crop_border: 4
+      crop_border: 2
       test_y_channel: true
       better: higher  # the higher, the better. Default: higher
 
 # logging settings
 logger:
-  print_freq: 1000
+  print_freq: 2000
   save_checkpoint_freq: !!float 1e4
   use_tb_logger: true
   wandb:

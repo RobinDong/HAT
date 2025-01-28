@@ -143,7 +143,7 @@ path:
   # pretrain_network_g: /home/robin/HAT_SRx4_ImageNet-pretrain.pth # train the MSE-based model 'Real_HAT' first.
   # pretrain_network_g: /home/robin/net_g_20000_PSNR_27.7_.pth
   # pretrain_network_g: /home/robin/HAT_SRx2_ImageNet-pretrain.pth
-  pretrain_network_g: /home/robin/tmp/net_g_170000.pth
+  pretrain_network_g: /home/robin/tmp/net_g_60000_27.36psnr_0.8063ssim.pth
   pretrain_network_d: /home/robin/tmp/net_d_250000.pth
   param_key_g: params_ema
   strict_load_g: true

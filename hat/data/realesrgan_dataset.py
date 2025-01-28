@@ -107,8 +107,8 @@ class RealESRGANDataset(data.Dataset):
                 retry -= 1
         img_gt = imfrombytes(img_bytes, float32=False)
         MIN_SIZE = 256
-        # randomly resize for different scale of texture [1.0 ~ 4.0)
-        ratio = np.random.random() * 3 + 1.0
+        # randomly resize for different scale of texture [0.5 ~ 2.0)
+        ratio = np.random.random() * 1.5 + 0.5
         height, width, _ = img_gt.shape
         new_width, new_height = int(width // ratio), int(height // ratio)
         if new_width >= MIN_SIZE and new_height >= MIN_SIZE:

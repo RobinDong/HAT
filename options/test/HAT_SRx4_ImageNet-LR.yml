@@ -39,7 +39,7 @@ network_g:
 # path
 path:
   pretrain_network_g: experiments/train_Real_HAT_GAN_SRx4_finetune_from_mse_model/models/net_g_170000.pth
-  # pretrain_network_g: /home/robin/Real_HAT_GAN_sharper.pth
+  #pretrain_network_g: /home/robin/tmp/net_g_0.8123ssim.pth
   strict_load_g: true
   param_key_g: 'params_ema'
 
